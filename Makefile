@@ -1,4 +1,6 @@
 # INFO: http://www.jarzebski.pl/blog/kategoria/software.html
+# INFO: http://www.nongnu.org/libunwind/
+# INFO: https://blog.cesanta.com/esp8266-gdb
 
 CONFIG_LIBRARY_NAME=		esp-open-sdk
 
