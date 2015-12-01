@@ -28,7 +28,7 @@ ROOT_DIR=			$(relpath \
 					.)
 
 all: \
-		$(CONFIG_SRC_DIR)/nodemcu/app/.output
+		$(CONFIG_SRC_DIR)/esp-open-rtos/examples/serial_echo/serial_echo
 
 clean: \
 		clean_$(CONFIG_SRC_DIR)
@@ -55,21 +55,21 @@ $(CONFIG_SRC_DIR)/$(CONFIG_LIBRARY_NAME)/xtensa-lx106-elf: \
 			STANDALONE=y
 
 
-$(CONFIG_SRC_DIR)/nodemcu: \
+$(CONFIG_SRC_DIR)/esp-open-rtos: \
 		%:
 	git \
 		clone \
 		--recursive \
-		https://github.com/nodemcu/nodemcu-firmware.git \
+		https://github.com/SuperHouse/esp-open-rtos.git \
 		$*
 
-$(CONFIG_SRC_DIR)/nodemcu/app/.output: \
-		$(CONFIG_SRC_DIR)/nodemcu \
-		$(CONFIG_SRC_DIR)/$(CONFIG_LIBRARY_NAME)/xtensa-lx106-elf
+$(CONFIG_SRC_DIR)/esp-open-rtos/examples/serial_echo/serial_echo: \
+		%/serial_echo: \
+		$(CONFIG_SRC_DIR)/$(CONFIG_LIBRARY_NAME)/xtensa-lx106-elf \
+		$(CONFIG_SRC_DIR)/esp-open-rtos
 	cd \
-		$(CONFIG_SRC_DIR)/nodemcu && \
+		$* && \
 		export \
 			PATH=$(realpath .)/$(CONFIG_SRC_DIR)/$(CONFIG_LIBRARY_NAME)/xtensa-lx106-elf/bin:$(PATH) && \
-		make 
+		make
 
-#tools/esptool.py write_flash -fm dio -fs 32m -ff 40m 0x00000 app/.output/eagle/debug/image/eagle.app.v6.out-0x00000.bin 0x10000 app/.output/eagle/debug/image/eagle.app.v6.out-0x10000.bin
