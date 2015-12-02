@@ -2,15 +2,29 @@
 
 include mk/config.mk
 include mk/internal.mk
-include mk/examples.mk
 include mk/download.mk
+include mk/examples.mk
+include mk/flash.mk
 include mk/root.mk
+
+test:
+	echo \
+		$(FLASH_EXAMPLE_ID_LIST)
+
+$(FLASH_RULE_LIST): \
+		$(FLASH_RULE_PREFIX)_%: \
+		$(INTERNAL_EXAMPLES_DIR)/%/$(EXAMPLES_TARGET_LOWER_FILE)
+	make \
+		flash \
+		-C \
+		$(INTERNAL_EXAMPLES_DIR)/$* \
+		ESPPORT=/dev/ttyUSB0
 
 $(EXAMPLES_RULE_LIST): \
 		$(EXAMPLES_RULE_PREFIX)_%: \
 		$(INTERNAL_EXAMPLES_DIR)/%/$(EXAMPLES_TARGET_LOWER_FILE)
 
-$(EXAMPLES_TARGET_FILE_DIR_LIST): \
+$(EXAMPLES_TARGET_FILE_LIST): \
 		%/$(EXAMPLES_TARGET_LOWER_FILE): \
 		$(INTERNAL_TOOLCHAIN_BIN_DIR) \
 		$(INTERNAL_RTOS_SRC_DIR)
