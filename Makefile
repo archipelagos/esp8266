@@ -4,6 +4,7 @@ include mk/config.mk
 include mk/internal.mk
 include mk/download.mk
 include mk/examples.mk
+include mk/clean.mk
 include mk/flash.mk
 include mk/root.mk
 
@@ -15,6 +16,9 @@ include mk/root.mk
 # TODO: TIPS:
 # TODO: * You can use -jN for parallel builds. Much faster! Use 'make rebuild' instead of 'make clean all' for parallel builds.
 # TODO: * You can create a local.mk file to create local overrides of variables like ESPPORT & ESPBAUD.
+
+all: \
+		$(EXAMPLES_RULE_LIST)
 
 $(FLASH_RULE_LIST): \
 		$(FLASH_RULE_PREFIX)_%: \
@@ -41,6 +45,8 @@ $(EXAMPLES_TARGET_FILE_LIST): \
 		export \
 			PATH=$(ROOT_DIR)/$(INTERNAL_TOOLCHAIN_BIN_DIR):$(PATH) && \
 			make
+# \
+#				BUILDDIR=build
 
 #make flash -j4 -C examples/http_get ESPPORT=/dev/ttyUSB0
 
@@ -71,12 +77,20 @@ $(INTERNAL_RTOS_SRC_DIR): \
 		$(INTERNAL_RTOS_FULL_URL) \
 		$*
 
-clean: \
-		clean_$(INTERNAL_SRC_DIR)
+$(CLEAN_RULE_PREFIX): \
+		$(CLEAN_RULE_PREFIX)_$(INTERNAL_SRC_DIR) \
+		$(CLEAN_RULE_LIST)
 
-clean_$(INTERNAL_SRC_DIR): \
-		clean_%:
+$(CLEAN_RULE_PREFIX)_$(INTERNAL_SRC_DIR): \
+		$(CLEAN_RULE_PREFIX)_%:
 	echo rm \
 		-rf \
 		$*
+
+$(CLEAN_RULE_LIST): \
+		$(CLEAN_RULE_PREFIX)_$(EXAMPLES_RULE_PREFIX)_%:
+	cd \
+		$(INTERNAL_EXAMPLES_DIR)/$* && \
+		make \
+			$(CLEAN_RULE_PREFIX)
 

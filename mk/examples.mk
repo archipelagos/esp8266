@@ -10,8 +10,12 @@ else
 EXAMPLES_FILE_LIST=
 endif
 
+EXAMPLES_FILTER_OUT_LIST=	$(CONFIG_BUILDSCRIPT_FILE_NAME) \
+				experiments \
+				tests
+
 EXAMPLES_TARGET_LIST=		$(filter-out \
-					$(CONFIG_BUILDSCRIPT_FILE_NAME), \
+					$(EXAMPLES_FILTER_OUT_LIST), \
 					$(EXAMPLES_FILE_LIST))
 
 EXAMPLES_RULE_LIST=		$(addprefix \

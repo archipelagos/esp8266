@@ -1,0 +1,5 @@
+CLEAN_RULE_PREFIX=		clean
+
+CLEAN_RULE_LIST=		$(addprefix \
+					$(CLEAN_RULE_PREFIX)_, \
+					$(EXAMPLES_RULE_LIST))
