@@ -7,6 +7,7 @@ include mk/examples.mk
 include mk/clean.mk
 include mk/flash.mk
 include mk/root.mk
+include mk/wifi.mk
 
 # TODO: Try OTA - Over-the-air programming.
 # TODO: rebuild
@@ -22,7 +23,8 @@ all: \
 
 $(FLASH_RULE_LIST): \
 		$(FLASH_RULE_PREFIX)_%: \
-		$(INTERNAL_EXAMPLES_DIR)/%/$(EXAMPLES_TARGET_LOWER_FILE)
+		$(INTERNAL_EXAMPLES_DIR)/%/$(EXAMPLES_TARGET_LOWER_FILE) \
+		$(INTERNAL_EXAMPLES_DIR)/%/$(EXAMPLES_TARGET_UPPER_FILE)
 	export \
 		PATH=$(ROOT_DIR)/$(INTERNAL_TOOLCHAIN_BIN_DIR):$(PATH) && \
 	make \
@@ -31,9 +33,25 @@ $(FLASH_RULE_LIST): \
 		$(INTERNAL_EXAMPLES_DIR)/$* \
 		ESPPORT=/dev/ttyUSB0
 
+$(WIFI_RULE):
+	sed \
+		's/^#warning/\/\/#warning/g' \
+		-i \
+		$(INTERNAL_WIFI_FILE_DIR)
+	sed \
+		's/\"mywifissid\"/\"aos_devel\"/g' \
+		-i \
+		$(INTERNAL_WIFI_FILE_DIR)
+	sed \
+		's/\"my\ secret\ password\"/\"aos_devel\"/g' \
+		-i \
+		$(INTERNAL_WIFI_FILE_DIR)
+
 $(EXAMPLES_RULE_LIST): \
 		$(EXAMPLES_RULE_PREFIX)_%: \
-		$(INTERNAL_EXAMPLES_DIR)/%/$(EXAMPLES_TARGET_LOWER_FILE)
+		$(WIFI_RULE) \
+		$(INTERNAL_EXAMPLES_DIR)/%/$(EXAMPLES_TARGET_LOWER_FILE) \
+		$(INTERNAL_EXAMPLES_DIR)/%/$(EXAMPLES_TARGET_UPPER_FILE)
 
 # TODO: Examples can be built outside the sdk - try it out.
 $(EXAMPLES_TARGET_FILE_LIST): \
