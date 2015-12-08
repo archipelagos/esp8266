@@ -54,8 +54,19 @@ $(EXAMPLES_RULE_LIST): \
 		$(INTERNAL_EXAMPLES_DIR)/%/$(EXAMPLES_TARGET_UPPER_FILE)
 
 # TODO: Examples can be built outside the sdk - try it out.
-$(EXAMPLES_TARGET_FILE_LIST): \
+$(EXAMPLES_TARGET_LOWER_FILE_LIST): \
 		%/$(EXAMPLES_TARGET_LOWER_FILE): \
+		$(INTERNAL_TOOLCHAIN_BIN_DIR) \
+		$(INTERNAL_RTOS_SRC_DIR)
+	cd \
+		$* && \
+		export \
+			PATH=$(ROOT_DIR)/$(INTERNAL_TOOLCHAIN_BIN_DIR):$(PATH) && \
+			make
+
+# TODO: Examples can be built outside the sdk - try it out.
+$(EXAMPLES_TARGET_UPPER_FILE_LIST): \
+		%/$(EXAMPLES_TARGET_UPPER_FILE): \
 		$(INTERNAL_TOOLCHAIN_BIN_DIR) \
 		$(INTERNAL_RTOS_SRC_DIR)
 	cd \
