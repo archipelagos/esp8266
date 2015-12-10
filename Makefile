@@ -21,17 +21,18 @@ include mk/wifi.mk
 all: \
 		$(EXAMPLES_RULE_LIST)
 
+#		$(INTERNAL_EXAMPLES_DIR)/%/$(EXAMPLES_TARGET_LOWER_FILE) \
+#		$(INTERNAL_EXAMPLES_DIR)/%/$(EXAMPLES_TARGET_UPPER_FILE)
+
 $(FLASH_RULE_LIST): \
-		$(FLASH_RULE_PREFIX)_%: \
-		$(INTERNAL_EXAMPLES_DIR)/%/$(EXAMPLES_TARGET_LOWER_FILE) \
-		$(INTERNAL_EXAMPLES_DIR)/%/$(EXAMPLES_TARGET_UPPER_FILE)
+		$(FLASH_RULE_PREFIX)_%:
 	export \
 		PATH=$(ROOT_DIR)/$(INTERNAL_TOOLCHAIN_BIN_DIR):$(PATH) && \
-	make \
-		flash \
-		-C \
-		$(INTERNAL_EXAMPLES_DIR)/$* \
-		ESPPORT=/dev/ttyUSB0
+		cd \
+			$(INTERNAL_EXAMPLES_DIR)/$* && \
+			sudo make \
+				flash \
+				ESPPORT=/dev/ttyUSB0
 
 $(WIFI_RULE):
 	sed \
