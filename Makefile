@@ -26,12 +26,11 @@ all: \
 
 $(FLASH_RULE_LIST): \
 		$(FLASH_RULE_PREFIX)_%:
-	export \
-		PATH=$(ROOT_DIR)/$(INTERNAL_TOOLCHAIN_BIN_DIR):$(PATH) && \
 		cd \
 			$(INTERNAL_EXAMPLES_DIR)/$* && \
 			sudo make \
 				flash \
+				PATH=$(ROOT_DIR)/$(INTERNAL_TOOLCHAIN_BIN_DIR):$(PATH) \
 				ESPPORT=/dev/ttyUSB0
 
 $(WIFI_RULE):
